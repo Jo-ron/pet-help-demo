@@ -57,6 +57,121 @@
     localStorage.setItem("petHelpFindPets", JSON.stringify(saved));
   }
 
+  function collectForm(form) {
+    const record = {};
+    Array.prototype.forEach.call(form.elements, function (field) {
+      if (field.name) record[field.name] = field.value.trim();
+    });
+    record.id = "item-" + Date.now();
+    return record;
+  }
+
+  function saveLocalRecord(form, key) {
+    const saved = JSON.parse(localStorage.getItem(key) || "{}");
+    const record = collectForm(form);
+    saved[record.id] = record;
+    localStorage.setItem(key, JSON.stringify(saved));
+  }
+
+  function renderHelpRecords() {
+    const list = document.querySelector("[data-help-list]");
+    if (!list) return;
+    const saved = JSON.parse(localStorage.getItem("petHelpHelpRecords") || "{}");
+    Object.keys(saved).reverse().forEach(function (id) {
+      const item = saved[id];
+      const article = document.createElement("article");
+      article.className = "bg-white rounded-2xl p-4 shadow-sm border border-teal-50";
+      article.innerHTML = '<div class="flex gap-3"><div class="w-16 h-16 rounded-2xl placeholder text-2xl shrink-0">🐾</div>' +
+        '<div class="min-w-0 flex-1"><div class="flex items-center justify-between"><h2 class="font-semibold">我发布的互助</h2>' +
+        '<span class="text-[11px] bg-teal-50 text-sage px-2 py-0.5 rounded-full">待报名</span></div>' +
+        '<p class="text-sm text-slate-500 mt-1">宠物类型：' + item.petType + (item.petAge ? " · " + item.petAge : "") + '</p>' +
+        '<p class="text-sm text-slate-500">寄养时间：' + item.time + '</p></div></div>' +
+        '<p class="text-sm text-slate-600 mt-3">' + item.desc + '</p>' +
+        '<button data-toast="已报名，已通知发布者" class="mt-3 w-full py-2.5 rounded-xl bg-mint text-white text-sm font-medium">我来报名</button>' +
+        '<a href="help-detail.html?id=' + encodeURIComponent(id) + '" class="block mt-2 text-center text-sm text-sage">查看详情</a>';
+      list.insertBefore(article, list.firstChild);
+    });
+  }
+
+  function renderGoodsRecords() {
+    const list = document.querySelector("[data-goods-list]");
+    if (!list) return;
+    const saved = JSON.parse(localStorage.getItem("petHelpGoodsRecords") || "{}");
+    Object.keys(saved).reverse().forEach(function (id) {
+      const item = saved[id];
+      const categoryMap = { "宠物主粮": "food", "笼子猫砂": "cage", "玩具用品": "toy", "穿戴用品": "wear", "其他": "other" };
+      const card = document.createElement("a");
+      card.href = "goods-detail.html?id=" + encodeURIComponent(id) + "&from=goods";
+      card.dataset.category = categoryMap[item.category] || "other";
+      card.className = "bg-white rounded-2xl overflow-hidden shadow-sm border border-orange-50";
+      card.innerHTML = '<div class="h-28 placeholder text-3xl">📦</div><div class="p-3"><h2 class="text-sm font-semibold truncate">' + item.name +
+        '</h2><p class="text-coral font-semibold mt-1">¥' + item.price + '</p><p class="text-[11px] text-slate-400 mt-1">' + item.category +
+        " · " + item.condition + '</p></div>';
+      list.insertBefore(card, list.firstChild);
+    });
+  }
+
+  function renderHelpRecordsDetail() {
+    const detail = document.querySelector("[data-help-detail]");
+    if (!detail) return;
+    const id = new URLSearchParams(window.location.search).get("id") || "help-lin";
+    const saved = JSON.parse(localStorage.getItem("petHelpHelpRecords") || "{}");
+    const deleteButton = detail.querySelector("[data-delete-help]");
+    if (Object.prototype.hasOwnProperty.call(saved, id)) {
+      deleteButton.classList.remove("hidden");
+      deleteButton.addEventListener("click", function () {
+        const records = JSON.parse(localStorage.getItem("petHelpHelpRecords") || "{}");
+        delete records[id];
+        localStorage.setItem("petHelpHelpRecords", JSON.stringify(records));
+        showToast("互助需求已删除");
+        setTimeout(function () { window.location.href = "help-list.html"; }, 500);
+      });
+    }
+    const defaults = {
+      "help-lin": { title: "林阿姨", petType: "布偶猫", petAge: "2岁", time: "9.20 - 9.22", place: "阳光花园", desc: "周末出差，希望邻居帮忙喂食铲砂，可提供猫粮与酬谢。", contact: "138****2190" },
+      "help-zhou": { title: "小周", petType: "金毛", petAge: "温顺", time: "9.18 晚 - 9.19 午", place: "小区内", desc: "加班到很晚，需要有人帮忙遛一次狗。", contact: "139****6672" },
+      "help-chen": { title: "陈同学", petType: "仓鼠", petAge: "", time: "国庆 7 天", place: "待确认", desc: "回家过节，笼子可一起带走，饲料已备好。", contact: "186****4418" }
+    };
+    const item = saved[id] || defaults[id] || defaults["help-lin"];
+    detail.querySelector("[data-help-title]").textContent = item.title + "的互助需求";
+    detail.querySelector("[data-help-fields]").innerHTML = "<p>宠物类型：" + item.petType + "</p><p>宠物年龄：" + (item.petAge || "未填写") + "</p><p>寄养时间：" + item.time + "</p><p>互助地点：" + item.place + "</p><p>需求说明：" + item.desc + "</p><p>联系方式：" + item.contact + "</p>";
+    detail.querySelector("[data-help-contact]").setAttribute("data-toast", "已模拟联系发布者：" + item.contact);
+  }
+
+  function renderGoodsDetail() {
+    const detail = document.querySelector("[data-goods-detail]");
+    if (!detail) return;
+    const id = new URLSearchParams(window.location.search).get("id") || "climbing";
+    const saved = JSON.parse(localStorage.getItem("petHelpGoodsRecords") || "{}");
+    const deleteButton = detail.querySelector("[data-delete-goods]");
+    if (Object.prototype.hasOwnProperty.call(saved, id)) {
+      deleteButton.classList.remove("hidden");
+      deleteButton.addEventListener("click", function () {
+        const records = JSON.parse(localStorage.getItem("petHelpGoodsRecords") || "{}");
+        delete records[id];
+        localStorage.setItem("petHelpGoodsRecords", JSON.stringify(records));
+        showToast("闲置商品已删除");
+        setTimeout(function () { window.location.href = "goods-list.html"; }, 500);
+      });
+    }
+    const defaults = {
+      climbing: { name: "猫爬架（九成新）", price: "68", category: "玩具用品", condition: "九成新", place: "梧桐里自提", desc: "家中猫咪更喜欢窗台，爬架闲置。主体稳固，绳柱轻微使用痕迹，无破损。", emoji: "🧸" },
+      food: { name: "未开封成猫粮 2kg", price: "45", category: "宠物主粮", condition: "全新未拆", place: "阳光花园自提", desc: "未开封成猫粮，保存完好。", emoji: "🥫" },
+      carrier: { name: "折叠航空箱", price: "80", category: "笼子猫砂", condition: "九成新", place: "翠湖公园附近", desc: "折叠便携，适合短途出行。", emoji: "📦" },
+      leash: { name: "牵引绳套装", price: "22", category: "穿戴用品", condition: "八成新", place: "梧桐里自提", desc: "牵引绳和胸背套装。", emoji: "🎀" },
+      shampoo: { name: "宠物沐浴露余量", price: "12", category: "其他", condition: "使用痕迹明显", place: "阳光花园", desc: "宠物沐浴露，剩余约一半。", emoji: "🧴" },
+      litter: { name: "豆腐猫砂 6L", price: "18", category: "笼子猫砂", condition: "全新未拆", place: "梧桐里自提", desc: "豆腐猫砂 6L，未拆封。", emoji: "🧻" }
+    };
+    const item = saved[id] || defaults[id] || defaults.climbing;
+    detail.querySelector("[data-goods-image]").textContent = item.emoji || "📦";
+    detail.querySelector("[data-goods-title]").textContent = item.name;
+    detail.querySelector("[data-goods-price]").textContent = "¥" + item.price;
+    detail.querySelector("[data-goods-category]").textContent = item.category;
+    detail.querySelector("[data-goods-condition]").textContent = item.condition;
+    detail.querySelector("[data-goods-place]").textContent = item.place;
+    detail.querySelector("[data-goods-desc]").textContent = item.desc;
+  }
+
   function renderFindPets() {
     const list = document.querySelector("[data-find-list]");
     if (!list) return;
@@ -113,6 +228,10 @@
 
   renderFindPets();
   renderFindDetail();
+  renderHelpRecords();
+  renderGoodsRecords();
+  renderHelpRecordsDetail();
+  renderGoodsDetail();
 
   const findSource = new URLSearchParams(window.location.search).get("from");
   if (findSource === "mine") {
@@ -160,6 +279,12 @@
       }
       if (form.hasAttribute("data-save-find")) {
         saveFindPet(form);
+      }
+      if (form.hasAttribute("data-save-help")) {
+        saveLocalRecord(form, "petHelpHelpRecords");
+      }
+      if (form.hasAttribute("data-save-goods")) {
+        saveLocalRecord(form, "petHelpGoodsRecords");
       }
       showToast(form.getAttribute("data-success") || "提交成功");
       form.reset();

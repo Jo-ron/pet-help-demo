@@ -13,26 +13,26 @@
   <link rel="stylesheet" href="css/app.css" />
 </head>
 <body>
-  <div class="app-shell page-pad">
+  <div class="app-shell page-pad" data-goods-detail>
     <header class="px-5 pt-6 pb-3 flex items-center justify-between">
       <a id="goodsBackLink" href="goods-list.html" class="text-sm text-sage">‹ 返回</a>
       <h1 class="text-lg font-semibold">商品详情</h1>
-      <button data-toast="已加入收藏" class="text-sm text-coral">收藏</button>
+      <div class="flex items-center gap-3"><button data-delete-goods class="hidden text-sm text-coral">删除</button><button data-toast="已加入收藏" class="text-sm text-coral">收藏</button></div>
     </header>
 
-    <div class="mx-5 h-56 rounded-2xl placeholder text-5xl">🧸</div>
+    <div class="mx-5 h-56 rounded-2xl placeholder text-5xl" data-goods-image>🧸</div>
 
     <section class="px-5 mt-4">
       <div class="flex items-end justify-between">
-        <h2 class="text-xl font-semibold">猫爬架（九成新）</h2>
-        <p class="text-2xl font-semibold text-coral">¥68</p>
+        <h2 class="text-xl font-semibold" data-goods-title>猫爬架（九成新）</h2>
+        <p class="text-2xl font-semibold text-coral" data-goods-price>¥68</p>
       </div>
       <div class="flex gap-2 mt-3 text-[11px]">
-        <span class="px-2 py-1 rounded-full bg-orange-50 text-peach">玩具用品</span>
-        <span class="px-2 py-1 rounded-full bg-teal-50 text-sage">九成新</span>
-        <span class="px-2 py-1 rounded-full bg-amber-50 text-ink/70">梧桐里自提</span>
+        <span class="px-2 py-1 rounded-full bg-orange-50 text-peach" data-goods-category>玩具用品</span>
+        <span class="px-2 py-1 rounded-full bg-teal-50 text-sage" data-goods-condition>九成新</span>
+        <span class="px-2 py-1 rounded-full bg-amber-50 text-ink/70" data-goods-place>梧桐里自提</span>
       </div>
-      <p class="text-sm text-slate-600 mt-4 leading-6">
+      <p class="text-sm text-slate-600 mt-4 leading-6" data-goods-desc>
         家中猫咪更喜欢窗台，爬架闲置。主体稳固，绳柱轻微使用痕迹，无破损。高约 120cm，可拆卸搬运。同小区优先，也可门口交接。
       </p>
     </section>
@@ -62,7 +62,7 @@
       </div>
     </nav>
   </div>
-  <script src="js/app.js"></script>
+  <script src="js/app.js?v=20260918-detail"></script>
   <script>
     if (new URLSearchParams(window.location.search).get("from") === "favorites") {
       document.getElementById("goodsBackLink").href = "favorites.html";

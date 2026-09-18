@@ -22,8 +22,8 @@
 
     <p class="px-5 text-xs text-slate-500 mb-3">帮忙照看几天，邻里互助更安心。</p>
 
-    <div class="px-5 space-y-3">
-      <article class="bg-white rounded-2xl p-4 shadow-sm border border-teal-50">
+    <div class="px-5 space-y-3" data-help-list>
+      <article data-help-id="help-lin" class="bg-white rounded-2xl p-4 shadow-sm border border-teal-50">
         <div class="flex gap-3">
           <div class="w-16 h-16 rounded-2xl placeholder text-2xl shrink-0">🐱</div>
           <div class="min-w-0 flex-1">
@@ -37,9 +37,10 @@
         </div>
         <p class="text-sm text-slate-600 mt-3">周末出差，希望邻居帮忙喂食铲砂，可提供猫粮与酬谢。</p>
         <button data-toast="报名成功，已通知求助人" class="mt-3 w-full py-2.5 rounded-xl bg-mint text-white text-sm font-medium">我来报名</button>
+        <a href="help-detail.html?id=help-lin" class="block mt-2 text-center text-sm text-sage">查看详情</a>
       </article>
 
-      <article class="bg-white rounded-2xl p-4 shadow-sm border border-teal-50">
+      <article data-help-id="help-zhou" class="bg-white rounded-2xl p-4 shadow-sm border border-teal-50">
         <div class="flex gap-3">
           <div class="w-16 h-16 rounded-2xl placeholder text-2xl shrink-0">🐕</div>
           <div class="min-w-0 flex-1">
@@ -53,9 +54,10 @@
         </div>
         <p class="text-sm text-slate-600 mt-3">加班到很晚，需要有人帮忙遛一次狗，小区内即可。</p>
         <button data-toast="报名成功，已通知求助人" class="mt-3 w-full py-2.5 rounded-xl bg-mint text-white text-sm font-medium">我来报名</button>
+        <a href="help-detail.html?id=help-zhou" class="block mt-2 text-center text-sm text-sage">查看详情</a>
       </article>
 
-      <article class="bg-white rounded-2xl p-4 shadow-sm border border-teal-50">
+      <article data-help-id="help-chen" class="bg-white rounded-2xl p-4 shadow-sm border border-teal-50">
         <div class="flex gap-3">
           <div class="w-16 h-16 rounded-2xl placeholder text-2xl shrink-0">🐹</div>
           <div class="min-w-0 flex-1">
@@ -69,6 +71,7 @@
         </div>
         <p class="text-sm text-slate-600 mt-3">回家过节，笼子可一起带走，饲料已备好。</p>
         <button data-toast="该求助已有人接单" class="mt-3 w-full py-2.5 rounded-xl bg-slate-200 text-slate-500 text-sm font-medium">暂不可报名</button>
+        <a href="help-detail.html?id=help-chen" class="block mt-2 text-center text-sm text-sage">查看详情</a>
       </article>
     </div>
 

@@ -10,14 +10,14 @@
 <body>
   <div class="app-shell page-pad">
     <header class="px-5 pt-6 pb-4 flex items-center justify-between"><a href="help-list.html" class="text-sm text-sage">‹ 返回</a><h1 class="text-lg font-semibold">发布互助需求</h1><span class="w-10"></span></header>
-    <form class="px-5 space-y-4" data-success="互助需求发布成功" data-redirect="help-list.html">
+    <form class="px-5 space-y-4" data-success="互助需求发布成功" data-redirect="help-list.html" data-save-help>
       <label class="block"><span class="text-sm font-medium">宠物类型</span><input required name="petType" placeholder="如：布偶猫、金毛" class="mt-1 w-full rounded-xl border border-orange-100 bg-white px-3 py-2.5 text-sm outline-none" /></label>
       <label class="block"><span class="text-sm font-medium">宠物年龄</span><input name="petAge" placeholder="如：2岁" class="mt-1 w-full rounded-xl border border-orange-100 bg-white px-3 py-2.5 text-sm outline-none" /></label>
       <label class="block"><span class="text-sm font-medium">寄养时间</span><input required name="time" placeholder="如：9.20 - 9.22" class="mt-1 w-full rounded-xl border border-orange-100 bg-white px-3 py-2.5 text-sm outline-none" /></label>
       <label class="block"><span class="text-sm font-medium">互助地点</span><input required name="place" placeholder="小区、街道或地标" class="mt-1 w-full rounded-xl border border-orange-100 bg-white px-3 py-2.5 text-sm outline-none" /></label>
       <label class="block"><span class="text-sm font-medium">需求说明</span><textarea required name="desc" rows="4" placeholder="需要邻居帮忙做什么，可提供哪些物品或酬谢" class="mt-1 w-full rounded-xl border border-orange-100 bg-white px-3 py-2.5 text-sm outline-none resize-none"></textarea></label>
       <label class="block"><span class="text-sm font-medium">联系方式</span><input required name="contact" placeholder="手机号 / 微信" class="mt-1 w-full rounded-xl border border-orange-100 bg-white px-3 py-2.5 text-sm outline-none" /></label>
-      <button type="submit" class="w-full py-3 rounded-2xl bg-coral text-white font-medium">提交发布</button>
+      <button type="submit" class="submit-button w-full py-3 rounded-2xl text-white font-medium" style="background-color: #e07a5f !important;">提交发布</button>
     </form>
   </div>
   <script src="js/app.js"></script>

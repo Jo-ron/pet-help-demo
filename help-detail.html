@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>互助详情 · 邻里宠帮</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="css/app.css" />
+</head>
+<body>
+  <div class="app-shell page-pad" data-help-detail>
+    <header class="px-5 pt-6 pb-3 flex items-center justify-between">
+      <a href="help-list.html" class="text-sm text-sage">‹ 返回</a>
+      <h1 class="text-lg font-semibold">互助详情</h1>
+      <div class="flex items-center gap-3"><button data-delete-help class="hidden text-sm text-coral">删除</button><button data-toast="已收藏这条互助信息" class="text-sm text-coral">收藏</button></div>
+    </header>
+    <section class="px-5 mt-2">
+      <div class="h-48 rounded-2xl placeholder text-6xl" data-help-image>🐱</div>
+      <div class="flex items-center justify-between mt-4">
+        <h2 class="text-xl font-semibold" data-help-title>邻里互助需求</h2>
+        <span class="text-[11px] bg-teal-50 text-sage px-2 py-1 rounded-full">待报名</span>
+      </div>
+      <div class="mt-4 bg-white rounded-2xl p-4 shadow-sm border border-teal-50 space-y-2 text-sm text-slate-600" data-help-fields></div>
+    </section>
+    <div class="px-5 mt-5"><button data-help-contact data-toast="报名成功，已通知发布者" class="w-full py-3 rounded-2xl bg-mint text-white font-medium">我来报名</button></div>
+  </div>
+  <script src="js/app.js?v=20260918-detail"></script>
+</body>
+</html>
