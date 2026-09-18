@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>寻宠信息 · 邻里宠帮</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: { extend: { colors: { cream: "#fff8f1", peach: "#f4a261", coral: "#e07a5f", mint: "#6bb3a8", sage: "#3d7a72", ink: "#2f3e46" } } }
+    };
+  </script>
+  <link rel="stylesheet" href="css/app.css" />
+</head>
+<body>
+  <div class="app-shell page-pad">
+    <header class="px-5 pt-6 pb-4 flex items-center justify-between">
+      <a id="findBackLink" href="index.html" class="text-sm text-sage">‹ 返回</a>
+      <h1 class="text-lg font-semibold">寻宠信息</h1>
+      <a href="publish-find.html" class="text-sm text-coral">发布</a>
+    </header>
+
+    <div class="px-5 space-y-3" data-find-list>
+      <a data-find-link href="find-detail.html?id=naigai" class="block bg-white rounded-2xl overflow-hidden shadow-sm border border-orange-50">
+        <div class="h-40 placeholder text-4xl">🐱</div>
+        <div class="p-4">
+          <div class="flex items-start justify-between gap-3">
+            <div>
+              <h2 class="font-semibold text-lg">奶盖</h2>
+              <p class="text-sm text-slate-500 mt-1">品种：橘猫 · 短毛</p>
+              <p class="text-sm text-slate-500">走失地点：阳光花园 3 号楼附近</p>
+            </div>
+            <span class="text-[11px] bg-rose-50 text-coral px-2 py-1 rounded-full shrink-0">寻找中</span>
+          </div>
+          <button data-toast="已模拟拨打：138****2190" class="mt-4 w-full py-2.5 rounded-xl bg-mint text-white text-sm font-medium">联系主人</button>
+        </div>
+      </a>
+
+      <a data-find-link href="find-detail.html?id=dou" class="block bg-white rounded-2xl overflow-hidden shadow-sm border border-orange-50">
+        <div class="h-40 placeholder text-4xl">🐕</div>
+        <div class="p-4">
+          <div class="flex items-start justify-between gap-3">
+            <div>
+              <h2 class="font-semibold text-lg">豆豆</h2>
+              <p class="text-sm text-slate-500 mt-1">品种：柯基</p>
+              <p class="text-sm text-slate-500">走失地点：翠湖公园西门</p>
+            </div>
+            <span class="text-[11px] bg-rose-50 text-coral px-2 py-1 rounded-full shrink-0">寻找中</span>
+          </div>
+          <button data-toast="已模拟拨打：139****6672" class="mt-4 w-full py-2.5 rounded-xl bg-mint text-white text-sm font-medium">联系主人</button>
+        </div>
+      </a>
+
+      <a data-find-link href="find-detail.html?id=yunduo" class="block bg-white rounded-2xl overflow-hidden shadow-sm border border-orange-50">
+        <div class="h-40 placeholder text-4xl">🐰</div>
+        <div class="p-4">
+          <div class="flex items-start justify-between gap-3">
+            <div>
+              <h2 class="font-semibold text-lg">云朵</h2>
+              <p class="text-sm text-slate-500 mt-1">品种：垂耳兔</p>
+              <p class="text-sm text-slate-500">走失地点：梧桐里小区北门</p>
+            </div>
+            <span class="text-[11px] bg-amber-50 text-peach px-2 py-1 rounded-full shrink-0">有线索</span>
+          </div>
+          <button data-toast="已模拟拨打：186****4418" class="mt-4 w-full py-2.5 rounded-xl bg-mint text-white text-sm font-medium">联系主人</button>
+        </div>
+      </a>
+    </div>
+
+    <a href="publish-find.html" class="fixed bottom-24 left-1/2 -translate-x-1/2 max-w-[430px] w-[calc(100%-2.5rem)] py-3 rounded-2xl bg-coral text-white text-center font-medium shadow-lg z-30">发布寻宠启事</a>
+
+    <nav class="bottom-nav bg-white/95 backdrop-blur border-t border-orange-100 px-2 py-2">
+      <div class="grid grid-cols-5 text-[11px] text-slate-400">
+        <a href="index.html" class="tab-item flex flex-col items-center gap-0.5 py-1"><span class="text-lg">🏠</span>首页</a>
+        <a href="find-pet.html" class="tab-item active flex flex-col items-center gap-0.5 py-1"><span class="text-lg">🔎</span>寻宠</a>
+        <a href="help-list.html" class="tab-item flex flex-col items-center gap-0.5 py-1"><span class="text-lg">🤝</span>互助</a>
+        <a href="goods-list.html" class="tab-item flex flex-col items-center gap-0.5 py-1"><span class="text-lg">🛒</span>闲置</a>
+        <a href="mine.html" class="tab-item flex flex-col items-center gap-0.5 py-1"><span class="text-lg">👤</span>我的</a>
+      </div>
+    </nav>
+  </div>
+  <script src="js/app.js"></script>
+</body>
+</html>

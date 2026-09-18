@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>寻宠详情 · 邻里宠帮</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="css/app.css" />
+</head>
+<body>
+  <div class="app-shell page-pad" data-find-detail>
+    <header class="px-5 pt-6 pb-3 flex items-center justify-between"><a data-find-back href="find-pet.html" class="text-sm text-sage">‹ 返回</a><h1 class="text-lg font-semibold">寻宠详情</h1><div class="flex items-center gap-3"><button data-delete-find class="hidden text-sm text-coral">删除</button><button data-toast="已收藏这条寻宠信息" class="text-sm text-coral">收藏</button></div></header>
+    <div class="mx-5 h-56 rounded-2xl placeholder text-6xl" data-pet-image>🐕</div>
+    <section class="px-5 mt-4"><div class="flex items-center justify-between"><div><span class="text-[11px] bg-rose-50 text-coral px-2 py-1 rounded-full">寻找中</span><h2 class="text-xl font-semibold mt-2" data-pet-title>急寻！柯基豆豆走失</h2></div><span class="text-sm text-slate-500" data-pet-date>9.20</span></div>
+      <div class="mt-4 bg-white rounded-2xl p-4 shadow-sm border border-orange-50 space-y-2 text-sm text-slate-600" data-pet-fields></div>
+    </section>
+    <div class="px-5 mt-5"><button data-contact-button data-toast="已模拟联系主人：139****6672" class="w-full py-3 rounded-2xl bg-mint text-white font-medium">联系主人</button></div>
+  </div>
+  <script src="js/app.js"></script>
+</body>
+</html>

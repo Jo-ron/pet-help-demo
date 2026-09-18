@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>个人中心 · 邻里宠帮</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: { extend: { colors: { cream: "#fff8f1", peach: "#f4a261", coral: "#e07a5f", mint: "#6bb3a8", sage: "#3d7a72", ink: "#2f3e46" } } }
+    };
+  </script>
+  <link rel="stylesheet" href="css/app.css" />
+</head>
+<body>
+  <div class="app-shell page-pad">
+    <header class="px-5 pt-8 pb-5">
+      <div class="flex items-center gap-4">
+        <div class="w-16 h-16 rounded-full placeholder text-2xl">🐾</div>
+        <div>
+          <h1 class="text-xl font-semibold">社区邻居 · 小夏</h1>
+          <p class="text-xs text-slate-500 mt-1">阳光花园 · 已认证养宠居民</p>
+        </div>
+      </div>
+      <div class="grid grid-cols-3 gap-2 mt-5 text-center">
+        <div class="bg-white rounded-2xl py-3 shadow-sm border border-orange-50">
+          <p class="text-lg font-semibold">3</p>
+          <p class="text-[11px] text-slate-500">我的发布</p>
+        </div>
+        <a href="favorites.html" class="block bg-white rounded-2xl py-3 shadow-sm border border-orange-50">
+          <p class="text-lg font-semibold">5</p>
+          <p class="text-[11px] text-slate-500">我的收藏</p>
+        </a>
+        <div class="bg-white rounded-2xl py-3 shadow-sm border border-orange-50">
+          <p class="text-lg font-semibold">2</p>
+          <p class="text-[11px] text-slate-500">未读消息</p>
+        </div>
+      </div>
+    </header>
+
+    <section class="px-5 space-y-3">
+      <a href="find-pet.html?from=mine" class="flex items-center justify-between bg-white rounded-2xl px-4 py-4 shadow-sm border border-orange-50">
+        <div class="flex items-center gap-3">
+          <span class="w-10 h-10 rounded-xl placeholder">📝</span>
+          <div>
+            <h2 class="font-semibold">我的发布</h2>
+            <p class="text-xs text-slate-500 mt-0.5">寻宠启事、闲置商品</p>
+          </div>
+        </div>
+        <span class="text-slate-300">›</span>
+      </a>
+      <a href="favorites.html" class="flex items-center justify-between bg-white rounded-2xl px-4 py-4 shadow-sm border border-orange-50">
+        <div class="flex items-center gap-3">
+          <span class="w-10 h-10 rounded-xl placeholder">⭐</span>
+          <div>
+            <h2 class="font-semibold">我的收藏</h2>
+            <p class="text-xs text-slate-500 mt-0.5">关注的商品与互助信息</p>
+          </div>
+        </div>
+        <span class="text-slate-300">›</span>
+      </a>
+      <button type="button" data-toast="暂无互助记录（演示）" class="w-full flex items-center justify-between bg-white rounded-2xl px-4 py-4 shadow-sm border border-orange-50 text-left">
+        <div class="flex items-center gap-3"><span class="w-10 h-10 rounded-xl placeholder">🤝</span><div><h2 class="font-semibold">互助记录</h2><p class="text-xs text-slate-500 mt-0.5">我报名和发起的互助</p></div></div><span class="text-slate-300">›</span>
+      </button>
+      <button type="button" data-toast="暂无新系统通知（演示）" class="w-full flex items-center justify-between bg-white rounded-2xl px-4 py-4 shadow-sm border border-orange-50 text-left">
+        <div class="flex items-center gap-3">
+          <span class="w-10 h-10 rounded-xl placeholder">🔔</span>
+          <div>
+            <h2 class="font-semibold">消息通知</h2>
+            <p class="text-xs text-slate-500 mt-0.5">报名、私信与寻宠线索</p>
+          </div>
+        </div>
+        <span class="text-[11px] bg-rose-50 text-coral px-2 py-0.5 rounded-full">2</span>
+      </button>
+      <button type="button" data-toast="消息设置已打开（演示）" class="w-full flex items-center justify-between bg-white rounded-2xl px-4 py-4 shadow-sm border border-orange-50 text-left"><span class="font-semibold">消息设置</span><span class="text-slate-300">›</span></button>
+      <button type="button" data-toast="暂无举报记录（演示）" class="w-full flex items-center justify-between bg-white rounded-2xl px-4 py-4 shadow-sm border border-orange-50 text-left"><span class="font-semibold">举报记录</span><span class="text-slate-300">›</span></button>
+      <button type="button" data-toast="邻里宠帮 · 社区宠物互助平台" class="w-full flex items-center justify-between bg-white rounded-2xl px-4 py-4 shadow-sm border border-orange-50 text-left"><span class="font-semibold">关于我们</span><span class="text-slate-300">›</span></button>
+    </section>
+
+    <section class="px-5 mt-6">
+      <h2 class="text-sm font-semibold mb-3">快捷发布</h2>
+      <div class="grid grid-cols-2 gap-3">
+        <a href="publish-find.html" class="rounded-2xl bg-gradient-to-br from-orange-50 to-rose-50 p-4 text-center">
+          <p class="text-2xl mb-1">🔍</p>
+          <p class="text-sm font-medium">发布寻宠</p>
+        </a>
+        <a href="publish-goods.html" class="rounded-2xl bg-gradient-to-br from-teal-50 to-sky-50 p-4 text-center">
+          <p class="text-2xl mb-1">🧺</p>
+          <p class="text-sm font-medium">发布闲置</p>
+        </a>
+      </div>
+    </section>
+
+    <nav class="bottom-nav bg-white/95 backdrop-blur border-t border-orange-100 px-2 py-2">
+      <div class="grid grid-cols-5 text-[11px] text-slate-400">
+        <a href="index.html" class="tab-item flex flex-col items-center gap-0.5 py-1"><span class="text-lg">🏠</span>首页</a>
+        <a href="find-pet.html" class="tab-item flex flex-col items-center gap-0.5 py-1"><span class="text-lg">🔎</span>寻宠</a>
+        <a href="help-list.html" class="tab-item flex flex-col items-center gap-0.5 py-1"><span class="text-lg">🤝</span>互助</a>
+        <a href="goods-list.html" class="tab-item flex flex-col items-center gap-0.5 py-1"><span class="text-lg">🛒</span>闲置</a>
+        <a href="mine.html" class="tab-item active flex flex-col items-center gap-0.5 py-1"><span class="text-lg">👤</span>我的</a>
+      </div>
+    </nav>
+  </div>
+  <script src="js/app.js"></script>
+</body>
+</html>

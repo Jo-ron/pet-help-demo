@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>宠物互助 · 邻里宠帮</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: { extend: { colors: { cream: "#fff8f1", peach: "#f4a261", coral: "#e07a5f", mint: "#6bb3a8", sage: "#3d7a72", ink: "#2f3e46" } } }
+    };
+  </script>
+  <link rel="stylesheet" href="css/app.css" />
+</head>
+<body>
+  <div class="app-shell page-pad">
+    <header class="px-5 pt-6 pb-4 flex items-center justify-between">
+      <a href="index.html" class="text-sm text-sage">‹ 返回</a>
+      <h1 class="text-lg font-semibold">邻里寄养互助</h1>
+      <span class="w-10"></span>
+    </header>
+
+    <p class="px-5 text-xs text-slate-500 mb-3">帮忙照看几天，邻里互助更安心。</p>
+
+    <div class="px-5 space-y-3">
+      <article class="bg-white rounded-2xl p-4 shadow-sm border border-teal-50">
+        <div class="flex gap-3">
+          <div class="w-16 h-16 rounded-2xl placeholder text-2xl shrink-0">🐱</div>
+          <div class="min-w-0 flex-1">
+            <div class="flex items-center justify-between">
+              <h2 class="font-semibold">林阿姨</h2>
+              <span class="text-[11px] bg-teal-50 text-sage px-2 py-0.5 rounded-full">待报名</span>
+            </div>
+            <p class="text-sm text-slate-500 mt-1">宠物类型：布偶猫 · 2 岁</p>
+            <p class="text-sm text-slate-500">寄养时间：9.20 - 9.22</p>
+          </div>
+        </div>
+        <p class="text-sm text-slate-600 mt-3">周末出差，希望邻居帮忙喂食铲砂，可提供猫粮与酬谢。</p>
+        <button data-toast="报名成功，已通知求助人" class="mt-3 w-full py-2.5 rounded-xl bg-mint text-white text-sm font-medium">我来报名</button>
+      </article>
+
+      <article class="bg-white rounded-2xl p-4 shadow-sm border border-teal-50">
+        <div class="flex gap-3">
+          <div class="w-16 h-16 rounded-2xl placeholder text-2xl shrink-0">🐕</div>
+          <div class="min-w-0 flex-1">
+            <div class="flex items-center justify-between">
+              <h2 class="font-semibold">小周</h2>
+              <span class="text-[11px] bg-teal-50 text-sage px-2 py-0.5 rounded-full">待报名</span>
+            </div>
+            <p class="text-sm text-slate-500 mt-1">宠物类型：金毛 · 温顺</p>
+            <p class="text-sm text-slate-500">寄养时间：9.18 晚 - 9.19 午</p>
+          </div>
+        </div>
+        <p class="text-sm text-slate-600 mt-3">加班到很晚，需要有人帮忙遛一次狗，小区内即可。</p>
+        <button data-toast="报名成功，已通知求助人" class="mt-3 w-full py-2.5 rounded-xl bg-mint text-white text-sm font-medium">我来报名</button>
+      </article>
+
+      <article class="bg-white rounded-2xl p-4 shadow-sm border border-teal-50">
+        <div class="flex gap-3">
+          <div class="w-16 h-16 rounded-2xl placeholder text-2xl shrink-0">🐹</div>
+          <div class="min-w-0 flex-1">
+            <div class="flex items-center justify-between">
+              <h2 class="font-semibold">陈同学</h2>
+              <span class="text-[11px] bg-amber-50 text-peach px-2 py-0.5 rounded-full">已有人接</span>
+            </div>
+            <p class="text-sm text-slate-500 mt-1">宠物类型：仓鼠</p>
+            <p class="text-sm text-slate-500">寄养时间：国庆 7 天</p>
+          </div>
+        </div>
+        <p class="text-sm text-slate-600 mt-3">回家过节，笼子可一起带走，饲料已备好。</p>
+        <button data-toast="该求助已有人接单" class="mt-3 w-full py-2.5 rounded-xl bg-slate-200 text-slate-500 text-sm font-medium">暂不可报名</button>
+      </article>
+    </div>
+
+    <a href="publish.html" class="fixed bottom-24 left-1/2 -translate-x-1/2 max-w-[430px] w-[calc(100%-2.5rem)] py-3 rounded-2xl bg-coral text-white text-center font-medium shadow-lg z-30">＋ 发布互助需求</a>
+
+    <nav class="bottom-nav bg-white/95 backdrop-blur border-t border-orange-100 px-2 py-2">
+      <div class="grid grid-cols-5 text-[11px] text-slate-400">
+        <a href="index.html" class="tab-item flex flex-col items-center gap-0.5 py-1"><span class="text-lg">🏠</span>首页</a>
+        <a href="find-pet.html" class="tab-item flex flex-col items-center gap-0.5 py-1"><span class="text-lg">🔎</span>寻宠</a>
+        <a href="help-list.html" class="tab-item active flex flex-col items-center gap-0.5 py-1"><span class="text-lg">🤝</span>互助</a>
+        <a href="goods-list.html" class="tab-item flex flex-col items-center gap-0.5 py-1"><span class="text-lg">🛒</span>闲置</a>
+        <a href="mine.html" class="tab-item flex flex-col items-center gap-0.5 py-1"><span class="text-lg">👤</span>我的</a>
+      </div>
+    </nav>
+  </div>
+  <script src="js/app.js"></script>
+</body>
+</html>

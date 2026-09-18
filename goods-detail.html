@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>商品详情 · 邻里宠帮</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: { extend: { colors: { cream: "#fff8f1", peach: "#f4a261", coral: "#e07a5f", mint: "#6bb3a8", sage: "#3d7a72", ink: "#2f3e46" } } }
+    };
+  </script>
+  <link rel="stylesheet" href="css/app.css" />
+</head>
+<body>
+  <div class="app-shell page-pad">
+    <header class="px-5 pt-6 pb-3 flex items-center justify-between">
+      <a id="goodsBackLink" href="goods-list.html" class="text-sm text-sage">‹ 返回</a>
+      <h1 class="text-lg font-semibold">商品详情</h1>
+      <button data-toast="已加入收藏" class="text-sm text-coral">收藏</button>
+    </header>
+
+    <div class="mx-5 h-56 rounded-2xl placeholder text-5xl">🧸</div>
+
+    <section class="px-5 mt-4">
+      <div class="flex items-end justify-between">
+        <h2 class="text-xl font-semibold">猫爬架（九成新）</h2>
+        <p class="text-2xl font-semibold text-coral">¥68</p>
+      </div>
+      <div class="flex gap-2 mt-3 text-[11px]">
+        <span class="px-2 py-1 rounded-full bg-orange-50 text-peach">玩具用品</span>
+        <span class="px-2 py-1 rounded-full bg-teal-50 text-sage">九成新</span>
+        <span class="px-2 py-1 rounded-full bg-amber-50 text-ink/70">梧桐里自提</span>
+      </div>
+      <p class="text-sm text-slate-600 mt-4 leading-6">
+        家中猫咪更喜欢窗台，爬架闲置。主体稳固，绳柱轻微使用痕迹，无破损。高约 120cm，可拆卸搬运。同小区优先，也可门口交接。
+      </p>
+    </section>
+
+    <section class="mx-5 mt-5 bg-white rounded-2xl p-4 shadow-sm border border-orange-50">
+      <p class="text-xs text-slate-400 mb-2">卖家简介</p>
+      <div class="flex items-center gap-3">
+        <div class="w-12 h-12 rounded-full placeholder">🙂</div>
+        <div>
+          <h3 class="font-semibold">阿宁 · 梧桐里 6 栋</h3>
+          <p class="text-xs text-slate-500 mt-0.5">养宠 3 年 · 信用良好 · 近 30 天成交 2 笔</p>
+        </div>
+      </div>
+    </section>
+
+    <div class="px-5 mt-6">
+      <button data-toast="私信已发送（演示，未存储）" class="w-full py-3 rounded-2xl bg-mint text-white font-medium">私信卖家</button>
+    </div>
+
+    <nav class="bottom-nav bg-white/95 backdrop-blur border-t border-orange-100 px-2 py-2">
+      <div class="grid grid-cols-5 text-[11px] text-slate-400">
+        <a href="index.html" class="tab-item flex flex-col items-center gap-0.5 py-1"><span class="text-lg">🏠</span>首页</a>
+        <a href="find-pet.html" class="tab-item flex flex-col items-center gap-0.5 py-1"><span class="text-lg">🔎</span>寻宠</a>
+        <a href="help-list.html" class="tab-item flex flex-col items-center gap-0.5 py-1"><span class="text-lg">🤝</span>互助</a>
+        <a href="goods-list.html" class="tab-item active flex flex-col items-center gap-0.5 py-1"><span class="text-lg">🛒</span>闲置</a>
+        <a href="mine.html" class="tab-item flex flex-col items-center gap-0.5 py-1"><span class="text-lg">👤</span>我的</a>
+      </div>
+    </nav>
+  </div>
+  <script src="js/app.js"></script>
+  <script>
+    if (new URLSearchParams(window.location.search).get("from") === "favorites") {
+      document.getElementById("goodsBackLink").href = "favorites.html";
+    }
+  </script>
+</body>
+</html>
