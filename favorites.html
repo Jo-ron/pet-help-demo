@@ -17,40 +17,14 @@
 
     <div class="px-5">
       <div class="grid grid-cols-3 gap-2 rounded-xl bg-white p-1 text-center text-sm shadow-sm">
-        <button class="rounded-lg bg-peach py-2 text-white">全部</button>
-        <button class="rounded-lg py-2 text-slate-500" data-toast="已切换到商品收藏">商品</button>
-        <button class="rounded-lg py-2 text-slate-500" data-toast="已切换到互助收藏">互助</button>
+        <button data-favorite-filter="all" class="rounded-lg bg-peach py-2 text-white active">全部</button>
+        <button data-favorite-filter="goods" class="rounded-lg py-2 text-slate-500">商品</button>
+        <button data-favorite-filter="help" class="rounded-lg py-2 text-slate-500">互助</button>
       </div>
     </div>
 
-    <section class="px-5 mt-5 space-y-3">
-      <a href="goods-detail.html?from=favorites" class="flex gap-3 rounded-2xl bg-white p-3 shadow-sm border border-orange-50">
-        <div class="w-20 h-20 rounded-xl placeholder text-3xl shrink-0">🧸</div>
-        <div class="min-w-0 flex-1">
-          <p class="text-sm font-semibold">猫爬架（九成新）</p>
-          <p class="text-coral font-semibold mt-1">¥68</p>
-          <p class="text-xs text-slate-500 mt-1">玩具用品 · 梧桐里自提</p>
-        </div>
-        <span class="text-slate-300">›</span>
-      </a>
-      <button type="button" data-toast="已打开互助收藏详情" class="w-full flex gap-3 rounded-2xl bg-white p-3 shadow-sm border border-teal-50 text-left">
-        <div class="w-20 h-20 rounded-xl placeholder text-3xl shrink-0">🐱</div>
-        <div class="min-w-0 flex-1">
-          <p class="text-sm font-semibold">林阿姨求周末帮带布偶猫</p>
-          <p class="text-xs text-slate-500 mt-1">寄养时间 9.20 - 9.22</p>
-          <p class="text-xs text-slate-500 mt-1">阳光花园 · 待报名</p>
-        </div>
-        <span class="text-slate-300">›</span>
-      </button>
-      <button type="button" data-toast="已打开寻宠收藏详情" class="w-full flex gap-3 rounded-2xl bg-white p-3 shadow-sm border border-orange-50 text-left">
-        <div class="w-20 h-20 rounded-xl placeholder text-3xl shrink-0">🐰</div>
-        <div class="min-w-0 flex-1">
-          <p class="text-sm font-semibold">云朵 · 寻找中</p>
-          <p class="text-xs text-slate-500 mt-1">垂耳兔 · 梧桐里小区北门</p>
-          <p class="text-xs text-slate-500 mt-1">收藏于 9.19</p>
-        </div>
-        <span class="text-slate-300">›</span>
-      </button>
+    <section class="px-5 mt-5 space-y-3" data-favorites-list>
+      <p class="text-sm text-slate-500 bg-white rounded-xl p-4">收藏内容仅保存在此浏览器。</p>
     </section>
 
     <nav class="bottom-nav bg-white/95 backdrop-blur border-t border-orange-100 px-2 py-2">

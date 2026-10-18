@@ -58,9 +58,10 @@
         <button type="button" data-upload class="mt-1 w-full h-32 rounded-2xl border border-dashed border-peach/70 placeholder text-sm">📷 点击添加照片（占位）</button>
       </div>
       <label class="block">
-        <span class="text-sm font-medium">联系方式</span>
-        <input required name="contact" placeholder="手机号 / 微信" class="mt-1 w-full rounded-xl border border-orange-100 bg-white px-3 py-2.5 text-sm outline-none focus:border-mint" />
+        <span class="text-sm font-medium">演示联系方式</span>
+        <input required name="contact" autocomplete="off" placeholder="仅用于校验，不会保存；请勿填写真实信息" class="mt-1 w-full rounded-xl border border-orange-100 bg-white px-3 py-2.5 text-sm outline-none focus:border-mint" />
       </label>
+      <label class="flex items-start gap-2 text-xs text-slate-500"><input required type="checkbox" name="contactConsent" class="mt-0.5" /><span>我了解正式产品会在对方确认后用于联系；当前静态演示不会保存该字段。</span></label>
       <button type="submit" class="w-full py-3 rounded-2xl bg-coral text-white font-medium">提交发布</button>
     </form>
 

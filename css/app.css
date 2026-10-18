@@ -156,6 +156,31 @@ body {
   display: flex;
 }
 
+.demo-dialog-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 100;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+  background: rgba(47, 62, 70, 0.42);
+}
+
+.demo-dialog-panel {
+  width: min(100%, 380px);
+  padding: 20px;
+  border-radius: 16px;
+  background: #fff;
+  box-shadow: 0 16px 48px rgba(47, 62, 70, 0.2);
+}
+
+.demo-dialog-confirm {
+  border: 1px solid var(--coral);
+  background-color: var(--coral);
+  color: #fff;
+}
+
 @media (min-width: 768px) {
   body {
     padding: 24px 0;
