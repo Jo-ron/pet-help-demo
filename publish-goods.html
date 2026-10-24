@@ -29,17 +29,19 @@
         <span class="text-sm font-medium">商品分类</span>
         <select required name="category" class="mt-1 w-full rounded-xl border border-orange-100 bg-white px-3 py-2.5 text-sm outline-none">
           <option value="">请选择分类</option>
-          <option>宠物主粮</option>
-          <option>笼子猫砂</option>
-          <option>玩具用品</option>
-          <option>穿戴用品</option>
-          <option>其他</option>
+          <option value="粮食零食">粮食零食</option>
+          <option value="笼子窝具">笼子窝具</option>
+          <option value="玩具用品">玩具用品</option>
+          <option value="牵引服饰">牵引服饰</option>
+          <option value="猫砂清洁">猫砂清洁</option>
+          <option value="其他用品">其他用品</option>
         </select>
       </label>
       <label class="block">
         <span class="text-sm font-medium">价格（元）</span>
         <input required type="number" min="0" step="0.01" name="price" placeholder="例如：68" class="mt-1 w-full rounded-xl border border-orange-100 bg-white px-3 py-2.5 text-sm outline-none focus:border-mint" />
       </label>
+      <label class="flex items-center gap-2 text-sm"><input type="checkbox" name="isFree" data-free-toggle />免费赠送</label>
       <label class="block">
         <span class="text-sm font-medium">新旧程度</span>
         <select required name="condition" class="mt-1 w-full rounded-xl border border-orange-100 bg-white px-3 py-2.5 text-sm outline-none">

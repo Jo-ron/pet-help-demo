@@ -1,4 +1,7 @@
 (function () {
+  const API_MODE = window.location.protocol === "http:" && (window.location.port === "8080" || new URLSearchParams(window.location.search).has("api"));
+  const API_BASE = "";
+
   function escapeHTML(value) {
     return String(value == null ? "" : value).replace(/[&<>"']/g, function (character) {
       return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[character];
@@ -63,8 +66,12 @@
   function collectForm(form) {
     const record = {};
     Array.prototype.forEach.call(form.elements, function (field) {
-      if (field.name && field.name !== "contact" && field.name !== "contactConsent") record[field.name] = field.value.trim();
+      if (field.name && field.name !== "contact" && field.name !== "contactConsent") {
+        record[field.name] = field.type === "checkbox" ? field.checked : field.value.trim();
+      }
     });
+    if (form.hasAttribute("data-save-help")) record.time = record.startAt + " - " + record.endAt;
+    if (form.hasAttribute("data-save-goods") && record.isFree) record.price = "0";
     record.id = "item-" + Date.now();
     return record;
   }
@@ -104,7 +111,7 @@
     const saved = JSON.parse(localStorage.getItem("petHelpGoodsRecords") || "{}");
     Object.keys(saved).reverse().forEach(function (id) {
       const item = saved[id];
-      const categoryMap = { "宠物主粮": "food", "笼子猫砂": "cage", "玩具用品": "toy", "穿戴用品": "wear", "其他": "other" };
+      const categoryMap = { "粮食零食": "food", "笼子窝具": "cage", "玩具用品": "toy", "牵引服饰": "wear", "猫砂清洁": "cleaning", "其他用品": "other" };
       const card = document.createElement("a");
       card.href = "goods-detail.html?id=" + encodeURIComponent(id) + "&from=goods";
       card.dataset.category = categoryMap[item.category] || "other";
@@ -112,7 +119,7 @@
       card.dataset.postId = id;
       card.className = "bg-white rounded-2xl overflow-hidden shadow-sm border border-orange-50";
       card.innerHTML = '<div class="h-28 placeholder text-3xl">📦</div><div class="p-3"><h2 class="text-sm font-semibold truncate">' + escapeHTML(item.name) +
-        '</h2><p class="text-coral font-semibold mt-1">¥' + escapeHTML(item.price) + '</p><p class="text-[11px] text-slate-400 mt-1">' + escapeHTML(item.category) +
+        '</h2><p class="text-coral font-semibold mt-1">' + (item.isFree ? "免费" : "¥" + escapeHTML(item.price)) + '</p><p class="text-[11px] text-slate-400 mt-1">' + escapeHTML(item.category) +
         " · " + escapeHTML(item.condition) + '</p></div>';
       list.insertBefore(card, list.firstChild);
     });
@@ -166,11 +173,11 @@
     }
     const defaults = {
       climbing: { name: "猫爬架（九成新）", price: "68", category: "玩具用品", condition: "九成新", place: "梧桐里自提", desc: "家中猫咪更喜欢窗台，爬架闲置。主体稳固，绳柱轻微使用痕迹，无破损。", emoji: "🧸" },
-      food: { name: "未开封成猫粮 2kg", price: "45", category: "宠物主粮", condition: "全新未拆", place: "阳光花园自提", desc: "未开封成猫粮，保存完好。", emoji: "🥫" },
-      carrier: { name: "折叠航空箱", price: "80", category: "笼子猫砂", condition: "九成新", place: "翠湖公园附近", desc: "折叠便携，适合短途出行。", emoji: "📦" },
-      leash: { name: "牵引绳套装", price: "22", category: "穿戴用品", condition: "八成新", place: "梧桐里自提", desc: "牵引绳和胸背套装。", emoji: "🎀" },
-      shampoo: { name: "宠物沐浴露余量", price: "12", category: "其他", condition: "使用痕迹明显", place: "阳光花园", desc: "宠物沐浴露，剩余约一半。", emoji: "🧴" },
-      litter: { name: "豆腐猫砂 6L", price: "18", category: "笼子猫砂", condition: "全新未拆", place: "梧桐里自提", desc: "豆腐猫砂 6L，未拆封。", emoji: "🧻" }
+      food: { name: "未开封成猫粮 2kg", price: "45", category: "粮食零食", condition: "全新未拆", place: "阳光花园自提", desc: "未开封成猫粮，保存完好。", emoji: "🥫" },
+      carrier: { name: "折叠航空箱", price: "80", category: "笼子窝具", condition: "九成新", place: "翠湖公园附近", desc: "折叠便携，适合短途出行。", emoji: "📦" },
+      leash: { name: "牵引绳套装", price: "22", category: "牵引服饰", condition: "八成新", place: "梧桐里自提", desc: "牵引绳和胸背套装。", emoji: "🎀" },
+      shampoo: { name: "宠物沐浴露余量", price: "12", category: "其他用品", condition: "使用痕迹明显", place: "阳光花园", desc: "宠物沐浴露，剩余约一半。", emoji: "🧴" },
+      litter: { name: "豆腐猫砂 6L", price: "18", category: "猫砂清洁", condition: "全新未拆", place: "梧桐里自提", desc: "豆腐猫砂 6L，未拆封。", emoji: "🧻" }
     };
     const item = saved[id] || defaults[id] || defaults.climbing;
     detail.querySelector("[data-goods-image]").textContent = item.emoji || "📦";
@@ -253,6 +260,7 @@
     if (changed) localStorage.setItem(key, JSON.stringify(saved));
   });
 
+  if (!API_MODE) {
   renderFindPets();
   renderFindDetail();
   renderHelpRecords();
@@ -375,6 +383,7 @@
       showToast("演示环境：图片上传为占位效果");
     });
   });
+  }
 
   const DEMO_KEYS = {
     find: "petHelpFindPets",
@@ -1043,6 +1052,687 @@
     refreshMineSummary();
   }
 
+  function apiToken() { return sessionStorage.getItem("petHelpApiToken") || ""; }
+
+  async function apiRequest(path, options) {
+    const settings = options || {};
+    const headers = Object.assign({ Accept: "application/json" }, settings.headers || {});
+    if (settings.body !== undefined) headers["Content-Type"] = "application/json";
+    if (apiToken()) headers.Authorization = "Bearer " + apiToken();
+    let response;
+    try {
+      response = await fetch(API_BASE + path, {
+        method: settings.method || "GET",
+        headers: headers,
+        body: settings.body === undefined ? undefined : JSON.stringify(settings.body)
+      });
+    } catch (error) {
+      throw new Error("无法连接本机 API；请确认 npm start 正在运行。");
+    }
+    const payload = await response.json().catch(function () { return {}; });
+    if (!response.ok) {
+      if (response.status === 401 && path !== "/api/v1/auth/demo" && path !== "/api/v1/auth/wechat") sessionStorage.removeItem("petHelpApiToken");
+      throw new Error(payload.error?.message || "请求失败，请稍后重试");
+    }
+    return payload;
+  }
+
+  function apiToast(message) {
+    const toast = document.querySelector(".toast") || (function () {
+      const node = document.createElement("div");
+      node.className = "toast";
+      document.body.appendChild(node);
+      return node;
+    })();
+    toast.textContent = message;
+    toast.classList.add("show");
+    clearTimeout(apiToast.timer);
+    apiToast.timer = setTimeout(function () { toast.classList.remove("show"); }, 2400);
+  }
+
+  function apiTrack(eventName, properties) {
+    const event = { event_id: window.crypto?.randomUUID ? window.crypto.randomUUID() : "evt-" + Date.now() + "-" + Math.random().toString(16).slice(2), event_name: eventName, properties: properties || {} };
+    fetch(API_BASE + "/api/v1/events", {
+      method: "POST",
+      headers: Object.assign({ "Content-Type": "application/json" }, apiToken() ? { Authorization: "Bearer " + apiToken() } : {}),
+      body: JSON.stringify(event),
+      keepalive: true
+    }).catch(function () {});
+  }
+
+  function apiShowDialog(title, message, options, onConfirm, confirmLabel) {
+    const overlay = document.createElement("div");
+    overlay.className = "demo-dialog-overlay";
+    overlay.setAttribute("role", "presentation");
+    const panel = document.createElement("section");
+    panel.className = "demo-dialog-panel";
+    panel.setAttribute("role", "dialog");
+    panel.setAttribute("aria-modal", "true");
+    const heading = document.createElement("h2");
+    heading.className = "text-lg font-semibold";
+    heading.textContent = title;
+    const description = document.createElement("p");
+    description.className = "text-sm text-slate-600 mt-2 leading-6";
+    description.textContent = message;
+    panel.append(heading, description);
+    let select;
+    if (options && options.length) {
+      select = document.createElement("select");
+      select.className = "mt-4 w-full rounded-xl border border-orange-100 bg-white px-3 py-2.5 text-sm";
+      options.forEach(function (item) {
+        const option = document.createElement("option");
+        option.value = item.value;
+        option.textContent = item.label;
+        select.appendChild(option);
+      });
+      panel.appendChild(select);
+    }
+    const buttons = document.createElement("div");
+    buttons.className = "mt-5 flex justify-end gap-2";
+    const cancel = document.createElement("button");
+    cancel.type = "button";
+    cancel.className = "px-4 py-2 rounded-xl border border-orange-100 text-sm";
+    cancel.textContent = "取消";
+    const confirm = document.createElement("button");
+    confirm.type = "button";
+    confirm.className = "demo-dialog-confirm px-4 py-2 rounded-xl text-sm";
+    confirm.textContent = confirmLabel || "确认";
+    cancel.addEventListener("click", function () { overlay.remove(); });
+    confirm.addEventListener("click", function () {
+      overlay.remove();
+      onConfirm(select ? select.value : true);
+    });
+    buttons.append(cancel, confirm);
+    panel.appendChild(buttons);
+    overlay.appendChild(panel);
+    overlay.addEventListener("click", function (event) { if (event.target === overlay) overlay.remove(); });
+    document.body.appendChild(overlay);
+    if (select) select.focus(); else confirm.focus();
+  }
+
+  function apiPostTypeFromPage() {
+    if (document.querySelector("[data-find-detail]")) return "find";
+    if (document.querySelector("[data-help-detail]")) return "help";
+    if (document.querySelector("[data-goods-detail]")) return "goods";
+    const path = window.location.pathname;
+    if (path.endsWith("find-pet.html")) return "find";
+    if (path.endsWith("help-list.html")) return "help";
+    if (path.endsWith("goods-list.html")) return "goods";
+    return null;
+  }
+
+  function apiDetailHref(type, postId) {
+    return (type === "find" ? "find-detail.html" : type === "help" ? "help-detail.html" : "goods-detail.html") + "?id=" + encodeURIComponent(postId);
+  }
+
+  function apiPostTitle(post) {
+    if (post.post_type === "find") return post.pet_name;
+    if (post.post_type === "help") return post.pet_type + " · " + post.help_type;
+    return post.title;
+  }
+
+  const apiFavorites = new Set();
+  const apiCategorySlugs = { food: "粮食零食", cage: "笼子窝具", toy: "玩具用品", wear: "牵引服饰", cleaning: "猫砂清洁", other: "其他用品" };
+
+  function apiFavoriteKey(type, postId) { return type + ":" + postId; }
+
+  async function apiLoadFavorites() {
+    if (!apiToken()) return;
+    const payload = await apiRequest("/api/v1/me/favorites");
+    apiFavorites.clear();
+    payload.items.forEach(function (post) { apiFavorites.add(apiFavoriteKey(post.post_type, post.id)); });
+  }
+
+  function apiStatusLabel(status) {
+    return ({ active: "有效", expired: "已过期", resolved: "已寻回", closed: "已下架/完成", removed: "已移除", deleted: "已删除" })[status] || status;
+  }
+
+  function apiCreateCard(post, ownerId) {
+    const article = document.createElement("article");
+    article.className = "bg-white rounded-2xl p-4 shadow-sm border border-orange-50";
+    if (post.post_type === "goods") article.dataset.category = post.category;
+    const link = document.createElement("a");
+    link.className = "flex items-start justify-between gap-3 text-inherit no-underline";
+    link.href = apiDetailHref(post.post_type, post.id);
+    const content = document.createElement("div");
+    content.className = "min-w-0 flex-1";
+    const title = document.createElement("h2");
+    title.className = "font-semibold";
+    title.textContent = apiPostTitle(post);
+    content.appendChild(title);
+    const fields = post.post_type === "find" ? [post.breed, post.lost_location, post.lost_at] : post.post_type === "help" ? [post.location_area, post.start_at, post.end_at] : [post.category, post.is_free ? "免费" : "¥" + post.price, post.location_area];
+    fields.filter(Boolean).forEach(function (value) {
+      const line = document.createElement("p");
+      line.className = "text-sm text-slate-500 mt-1";
+      line.textContent = value;
+      content.appendChild(line);
+    });
+    const badge = document.createElement("span");
+    badge.className = "text-[11px] bg-teal-50 text-sage px-2 py-1 rounded-full shrink-0";
+    badge.textContent = apiStatusLabel(post.status);
+    link.append(content, badge);
+    article.appendChild(link);
+    if (post.description) {
+      const description = document.createElement("p");
+      description.className = "text-sm text-slate-600 mt-3";
+      description.textContent = post.description;
+      article.appendChild(description);
+    }
+    const actions = document.createElement("div");
+    actions.className = "mt-3 flex gap-2";
+    const favorite = document.createElement("button");
+    favorite.type = "button";
+    favorite.className = "px-3 py-2 rounded-xl border border-orange-100 text-sm";
+    favorite.textContent = apiFavorites.has(apiFavoriteKey(post.post_type, post.id)) ? "已收藏" : "收藏";
+    favorite.dataset.apiAction = "favorite";
+    favorite.dataset.postType = post.post_type;
+    favorite.dataset.postId = post.id;
+    actions.appendChild(favorite);
+    if (post.status === "active" && ownerId !== post.owner?.id) {
+      const contact = document.createElement("button");
+      contact.type = "button";
+      contact.className = "flex-1 py-2 rounded-xl bg-mint text-white text-sm";
+      contact.textContent = "获取联系方式";
+      contact.dataset.apiAction = "contact";
+      contact.dataset.postType = post.post_type;
+      contact.dataset.postId = post.id;
+      actions.appendChild(contact);
+    }
+    article.appendChild(actions);
+    return article;
+  }
+
+  async function apiRequireLogin(form) {
+    if (apiToken()) return true;
+    if (form) {
+      const values = {};
+      new FormData(form).forEach(function (value, key) {
+        if (key !== "contact" && key !== "contactConsent") values[key] = String(value);
+      });
+      const type = form.hasAttribute("data-save-find") ? "find" : form.hasAttribute("data-save-help") ? "help" : "goods";
+      sessionStorage.setItem("petHelpApiPendingDraft", JSON.stringify({ type: type, values: values }));
+    }
+    sessionStorage.setItem("petHelpApiReturnTo", window.location.href);
+    apiTrack("login_start", { entry_point: window.location.pathname });
+    window.location.href = "login.html?api=1";
+    return false;
+  }
+
+  async function apiCurrentUser() {
+    if (!apiToken()) return null;
+    try { return (await apiRequest("/api/v1/auth/me")).user; }
+    catch (error) { sessionStorage.removeItem("petHelpApiToken"); return null; }
+  }
+
+  async function apiRenderList(type) {
+    const list = document.querySelector("[data-" + type + "-list]");
+    if (!list) return;
+    const filter = type === "goods" ? document.getElementById("goodsFilter") : null;
+    const query = new URLSearchParams({ limit: "20", offset: "0" });
+    if (filter?.value && filter.value !== "all") query.set("category", apiCategorySlugs[filter.value] || filter.value);
+    const payload = await apiRequest("/api/v1/posts/" + type + "?" + query.toString());
+    const user = await apiCurrentUser();
+    list.replaceChildren();
+    if (!payload.items.length) {
+      const empty = document.createElement("p");
+      empty.className = "text-sm text-slate-500 bg-white rounded-xl p-4";
+      empty.textContent = "服务端暂无有效内容";
+      list.appendChild(empty);
+      return;
+    }
+    payload.items.forEach(function (post) { list.appendChild(apiCreateCard(post, user?.id)); });
+    apiTrack("post_list_view", { post_type: type, result_count: payload.items.length, page_index: 0 });
+  }
+
+  function apiAppendField(container, label, value) {
+    const row = document.createElement("p");
+    row.textContent = label + "：" + (value || "未填写");
+    container.appendChild(row);
+  }
+
+  async function apiRenderDetail() {
+    const root = document.querySelector("[data-find-detail],[data-help-detail],[data-goods-detail]");
+    if (!root) return;
+    const type = root.hasAttribute("data-find-detail") ? "find" : root.hasAttribute("data-help-detail") ? "help" : "goods";
+    const postId = new URLSearchParams(window.location.search).get("id");
+    if (!postId) { apiToast("缺少帖子编号"); return; }
+    const payload = await apiRequest("/api/v1/posts/" + type + "/" + encodeURIComponent(postId));
+    const post = payload.post;
+    const user = await apiCurrentUser();
+    const legacyContact = root.querySelector("[data-contact-button],[data-help-contact],[data-demo-contact]");
+    if (legacyContact) { legacyContact.hidden = true; legacyContact.removeAttribute("data-toast"); }
+    root.querySelectorAll("button[data-toast]").forEach(function (button) { button.hidden = true; });
+    const title = apiPostTitle(post);
+    if (type === "find") {
+      root.querySelector("[data-pet-image]").textContent = "🐾";
+      root.querySelector("[data-pet-title]").textContent = "急寻！" + title + "走失";
+      root.querySelector("[data-pet-date]").textContent = post.lost_at || "待补充";
+    } else if (type === "help") {
+      root.querySelector("[data-help-title]").textContent = title;
+    } else {
+      root.querySelector("[data-goods-image]").textContent = "📦";
+      root.querySelector("[data-goods-title]").textContent = post.title;
+      root.querySelector("[data-goods-price]").textContent = post.is_free ? "免费" : "¥" + post.price;
+      root.querySelector("[data-goods-category]").textContent = post.category;
+      root.querySelector("[data-goods-condition]").textContent = post.condition_level;
+      root.querySelector("[data-goods-place]").textContent = post.location_area;
+      root.querySelector("[data-goods-desc]").textContent = post.description;
+    }
+    const fields = root.querySelector("[data-pet-fields],[data-help-fields]");
+    if (fields) {
+      fields.replaceChildren();
+      const values = type === "find" ? [["品种", post.breed], ["特征", post.color_or_features], ["走失地点", post.lost_location], ["走失时间", post.lost_at], ["说明", post.description]]
+        : [["互助方式", post.help_type], ["宠物情况", post.pet_description || post.pet_type], ["开始时间", post.start_at], ["结束时间", post.end_at], ["地点", post.location_area], ["需求说明", post.description]];
+      values.forEach(function (item) { apiAppendField(fields, item[0], item[1]); });
+    }
+    const status = root.querySelector("[data-post-status]");
+    if (status) status.textContent = apiStatusLabel(post.status);
+    const oldActions = root.querySelector("[data-api-actions]");
+    if (oldActions) oldActions.remove();
+    const actions = document.createElement("div");
+    actions.dataset.apiActions = "";
+    actions.className = "px-5 mt-3 flex flex-wrap gap-2";
+    const favorite = document.createElement("button");
+    favorite.type = "button";
+    favorite.className = "px-3 py-2 rounded-xl border border-orange-100 text-sm";
+    favorite.textContent = apiFavorites.has(apiFavoriteKey(type, postId)) ? "已收藏" : "收藏";
+    favorite.dataset.apiAction = "favorite";
+    favorite.dataset.postType = type;
+    favorite.dataset.postId = postId;
+    actions.appendChild(favorite);
+    if (post.status === "active" && post.owner?.id !== user?.id) {
+      const contact = document.createElement("button");
+      contact.type = "button";
+      contact.className = "px-3 py-2 rounded-xl bg-mint text-white text-sm";
+      contact.textContent = "获取联系方式";
+      contact.dataset.apiAction = "contact";
+      contact.dataset.postType = type;
+      contact.dataset.postId = postId;
+      actions.appendChild(contact);
+      const report = document.createElement("button");
+      report.type = "button";
+      report.className = "px-3 py-2 rounded-xl border border-rose-100 text-coral text-sm";
+      report.textContent = "举报";
+      report.dataset.apiAction = "report";
+      report.dataset.postType = type;
+      report.dataset.postId = postId;
+      actions.appendChild(report);
+    }
+    if (post.owner?.id && post.owner.id === user?.id) {
+      const statuses = type === "find" ? [["已寻回", "resolved"], ["删除", "deleted"]] : [["下架/完成", "closed"], ["删除", "deleted"]];
+      statuses.forEach(function (item) {
+        const button = document.createElement("button");
+        button.type = "button";
+        button.className = "px-3 py-2 rounded-xl border border-slate-200 text-sm";
+        button.textContent = item[0];
+        button.dataset.apiAction = "status";
+        button.dataset.status = item[1];
+        button.dataset.postType = type;
+        button.dataset.postId = postId;
+        actions.appendChild(button);
+      });
+    }
+    root.appendChild(actions);
+    apiTrack("post_detail_view", { post_type: type, post_id: postId, post_status: post.status });
+  }
+
+  async function apiRenderFavorites() {
+    const list = document.querySelector("[data-favorites-list]");
+    if (!list) return;
+    const payload = await apiRequest("/api/v1/me/favorites");
+    apiFavorites.clear();
+    payload.items.forEach(function (post) { apiFavorites.add(apiFavoriteKey(post.post_type, post.id)); });
+    const filter = document.querySelector("[data-favorite-filter].active")?.dataset.favoriteFilter || "all";
+    const items = payload.items.filter(function (post) { return filter === "all" || post.post_type === filter; });
+    list.replaceChildren();
+    if (!items.length) {
+      const empty = document.createElement("p");
+      empty.className = "text-sm text-slate-500 bg-white rounded-xl p-4";
+      empty.textContent = "服务端暂无收藏";
+      list.appendChild(empty);
+      return;
+    }
+    items.forEach(function (post) {
+      const card = apiCreateCard(post, apiUser?.id);
+      list.appendChild(card);
+    });
+  }
+
+  async function apiToggleFavorite(type, postId) {
+    if (!await apiRequireLogin()) return;
+    const key = apiFavoriteKey(type, postId);
+    const removing = apiFavorites.has(key);
+    try {
+      await apiRequest("/api/v1/favorites/" + type + "/" + encodeURIComponent(postId), { method: removing ? "DELETE" : "PUT" });
+      if (removing) apiFavorites.delete(key); else apiFavorites.add(key);
+      apiTrack("favorite_change", { post_type: type, action: removing ? "remove" : "add" });
+      apiToast(removing ? "已取消服务端收藏" : "已加入服务端收藏");
+      if (document.querySelector("[data-favorites-list]")) await apiRenderFavorites();
+      if (document.querySelector("[data-find-detail],[data-help-detail],[data-goods-detail]")) await apiRenderDetail();
+    } catch (error) { apiToast(error.message); }
+  }
+
+  async function apiRenderMine() {
+    const list = document.querySelector("[data-mine-post-list]");
+    if (!list) return;
+    const payload = await apiRequest("/api/v1/me/posts");
+    list.replaceChildren();
+    if (!payload.items.length) {
+      const empty = document.createElement("p");
+      empty.className = "text-sm text-slate-500";
+      empty.textContent = "服务端暂无发布内容";
+      list.appendChild(empty);
+    } else {
+      payload.items.forEach(function (post) {
+        const row = document.createElement("div");
+        row.className = "border-t border-orange-100 pt-3 first:border-0 first:pt-0";
+        const link = document.createElement("a");
+        link.className = "text-sm font-medium text-sage";
+        link.href = apiDetailHref(post.post_type, post.id);
+        link.textContent = apiPostTitle(post) + " · " + apiStatusLabel(post.status);
+        row.appendChild(link);
+        if (["deleted", "resolved", "closed"].includes(post.status)) {
+          const restore = document.createElement("button");
+          restore.type = "button";
+          restore.className = "ml-3 text-xs text-coral";
+          restore.textContent = "撤销状态";
+          restore.dataset.apiAction = "status";
+          restore.dataset.status = "active";
+          restore.dataset.postType = post.post_type;
+          restore.dataset.postId = post.id;
+          row.appendChild(restore);
+        }
+        list.appendChild(row);
+      });
+    }
+    const count = document.querySelector("[data-mine-post-count]");
+    if (count) count.textContent = String(payload.items.length);
+  }
+
+  async function apiHandleContact(type, postId) {
+    if (!await apiRequireLogin()) return;
+    apiShowDialog("获取联系方式", "确认后会向服务端申请一次性联系凭证，并调起系统拨号；请勿记录或分享号码。", null, async function () {
+      try {
+        const ticket = await apiRequest("/api/v1/posts/" + type + "/" + encodeURIComponent(postId) + "/contact", { method: "POST", body: { confirmed: true } });
+        const result = await apiRequest("/api/v1/contact-tickets/redeem", { method: "POST", body: { contact_token: ticket.contact_token } });
+        apiTrack("contact_flow", { post_type: type, stage: "redeemed", result: "success" });
+        apiShowDialog("拨打电话", "请确认后打开系统拨号应用。号码不会显示在页面上。", null, function () {
+          window.location.href = "tel:" + result.contact_phone;
+        }, "拨号");
+      } catch (error) {
+        apiToast(error.message);
+      }
+    }, "继续拨号");
+  }
+
+  async function apiHandleReport(type, postId) {
+    if (!await apiRequireLogin()) return;
+    const reasons = [
+      { label: "虚假信息", value: "false_information" },
+      { label: "骚扰/诈骗", value: "harassment_or_scam" },
+      { label: "违规内容", value: "prohibited_content" },
+      { label: "隐私泄露", value: "privacy_exposure" },
+      { label: "其他", value: "other" }
+    ];
+    apiShowDialog("举报内容", "请选择举报原因。", reasons, async function (reason) {
+      try {
+        await apiRequest("/api/v1/posts/" + type + "/" + encodeURIComponent(postId) + "/reports", { method: "POST", body: { reason: reason } });
+        apiTrack("report_submit", { post_type: type, reason_category: reason });
+        apiToast("举报已提交给服务端维护者");
+      } catch (error) { apiToast(error.message); }
+    }, "提交举报");
+  }
+
+  async function apiHandleStatus(type, postId, status) {
+    if (!await apiRequireLogin()) return;
+    const prompt = status === "deleted" ? "帖子将从公开列表移除，24 小时内可撤销。" : status === "resolved" ? "确认宠物已寻回？" : status === "active" ? "在允许的撤销期限内恢复帖子？" : "确认下架或标记完成？";
+    apiShowDialog("确认操作", prompt, null, async function () {
+      try {
+        await apiRequest("/api/v1/posts/" + type + "/" + encodeURIComponent(postId), { method: "PATCH", body: { status: status } });
+        apiTrack("post_status_change", { post_type: type, to_status: status, change_source: "owner" });
+        apiToast("帖子状态已保存到服务端");
+        if (type === "find" && document.querySelector("[data-find-list]")) await apiRenderList(type);
+        else if (type === "help" && document.querySelector("[data-help-list]")) await apiRenderList(type);
+        else if (type === "goods" && document.querySelector("[data-goods-list]")) await apiRenderList(type);
+        else if (document.querySelector("[data-mine-post-list]")) await apiRenderMine();
+        else await apiRenderDetail();
+      } catch (error) { apiToast(error.message); }
+    }, "确认");
+  }
+
+  function apiFormPayload(form, type) {
+    const values = {};
+    new FormData(form).forEach(function (value, key) { values[key] = String(value).trim(); });
+    if (!form.querySelector("[name=contactConsent]")?.checked) throw new Error("请确认联系方式用途");
+    if (type === "find") {
+      return {
+        pet_name: values.name,
+        breed: values.breed,
+        color_or_features: values.appearance,
+        age: values.age || null,
+        lost_at: new Date(values.lostTime + "T12:00:00").toISOString(),
+        lost_location: values.place,
+        description: values.description,
+        reward: values.reward || null,
+        contact_note: values.contactNote || null,
+        contact_phone: values.contact,
+        image_refs: []
+      };
+    }
+    if (type === "help") {
+      return {
+        help_type: values.helpType,
+        pet_type: values.petType,
+        pet_description: values.petAge || null,
+        start_at: new Date(values.startAt).toISOString(),
+        end_at: new Date(values.endAt).toISOString(),
+        location_area: values.place,
+        description: values.desc,
+        contact_phone: values.contact,
+        image_refs: []
+      };
+    }
+    const isFree = Boolean(form.querySelector("[name=isFree]")?.checked);
+    return {
+      title: values.name,
+      category: values.category,
+      price: isFree ? null : Number(values.price),
+      is_free: isFree,
+      condition_level: values.condition,
+      description: values.desc,
+      location_area: values.place,
+      contact_phone: values.contact,
+      image_refs: []
+    };
+  }
+
+  async function apiHandlePublish(form) {
+    const type = form.hasAttribute("data-save-find") ? "find" : form.hasAttribute("data-save-help") ? "help" : "goods";
+    if (!form.checkValidity()) { form.reportValidity(); return; }
+    if (!await apiRequireLogin(form)) return;
+    let body;
+    try { body = apiFormPayload(form, type); }
+    catch (error) { apiToast(error.message); return; }
+    const submit = form.querySelector('[type="submit"]');
+    if (submit) submit.disabled = true;
+    try {
+      const result = await apiRequest("/api/v1/posts/" + type, { method: "POST", body: body });
+      apiTrack("publish_result", { post_type: type, result: "success" });
+      apiToast("帖子已保存到 SQLite 服务端");
+      form.reset();
+      const redirect = form.getAttribute("data-redirect");
+      if (redirect) setTimeout(function () { window.location.href = redirect; }, 350);
+    } catch (error) {
+      apiToast(error.message);
+      apiTrack("publish_result", { post_type: type, result: "failed" });
+    } finally {
+      if (submit) submit.disabled = false;
+    }
+  }
+
+  let apiUser = null;
+
+  async function initApiMode() {
+    const shell = document.querySelector(".app-shell");
+    if (window.location.pathname.endsWith("login.html")) {
+      const loginButton = document.querySelector("[data-href]");
+      if (loginButton) loginButton.textContent = "使用本机开发账号";
+      const loginNote = document.querySelector("main p.text-xs");
+      if (loginNote) loginNote.textContent = "此页面仅使用本机 API 开发账号；真实微信 code 需在微信小程序容器中获取。";
+    }
+    if (shell) {
+      const banner = document.createElement("p");
+      banner.className = "mx-4 mt-3 px-3 py-2 rounded-lg bg-amber-50 text-xs text-slate-600";
+      banner.textContent = "API 联调模式：数据保存到本机 SQLite；请只使用合成联系方式。当前未启用 HTTPS。";
+      shell.insertBefore(banner, shell.firstChild);
+    }
+
+    document.addEventListener("click", async function (event) {
+      const target = event.target.closest("button,a");
+      if (!target) return;
+      if (target.hasAttribute("data-href") && window.location.pathname.endsWith("login.html")) {
+        event.preventDefault();
+        event.stopImmediatePropagation();
+        try {
+          const user = await apiRequest("/api/v1/auth/demo", { method: "POST", body: { display_name: "本机联调用户" } });
+          sessionStorage.setItem("petHelpApiToken", user.access_token);
+          apiTrack("login_result", { result: "development_demo" });
+          const returnTo = sessionStorage.getItem("petHelpApiReturnTo") || "mine.html";
+          sessionStorage.removeItem("petHelpApiReturnTo");
+          window.location.href = returnTo;
+        } catch (error) { apiToast(error.message); }
+        return;
+      }
+      if (target.hasAttribute("data-api-action")) {
+        event.preventDefault();
+        event.stopImmediatePropagation();
+        const type = target.dataset.postType;
+        const postId = target.dataset.postId;
+        if (target.dataset.apiAction === "favorite") {
+          await apiToggleFavorite(type, postId);
+        } else if (target.dataset.apiAction === "contact") {
+          await apiHandleContact(type, postId);
+        } else if (target.dataset.apiAction === "report") {
+          await apiHandleReport(type, postId);
+        } else if (target.dataset.apiAction === "status") {
+          await apiHandleStatus(type, postId, target.dataset.status);
+        }
+        return;
+      }
+      if (target.hasAttribute("data-favorite-filter")) {
+        event.preventDefault();
+        event.stopImmediatePropagation();
+        document.querySelectorAll("[data-favorite-filter]").forEach(function (button) {
+          const active = button === target;
+          button.classList.toggle("active", active);
+          button.classList.toggle("bg-peach", active);
+          button.classList.toggle("text-white", active);
+        });
+        try { await apiRenderFavorites(); } catch (error) { apiToast(error.message); }
+        return;
+      }
+      if (target.hasAttribute("data-demo-logout")) {
+        event.preventDefault();
+        event.stopImmediatePropagation();
+        try { await apiRequest("/api/v1/auth/logout", { method: "POST" }); } catch (error) {}
+        sessionStorage.removeItem("petHelpApiToken");
+        window.location.reload();
+      }
+    }, true);
+
+    document.addEventListener("submit", function (event) {
+      const form = event.target;
+      if (!form.matches("form[data-save-find],form[data-save-help],form[data-save-goods]")) return;
+      event.preventDefault();
+      event.stopImmediatePropagation();
+      void apiHandlePublish(form);
+    }, true);
+
+    document.querySelectorAll("form[data-save-find],form[data-save-help],form[data-save-goods]").forEach(function (form) {
+      const phone = form.querySelector("[name=contact]");
+      if (phone) phone.placeholder = "API 联调仅用合成号码；服务端会保存此字段";
+    });
+    let pendingDraft = null;
+    try { pendingDraft = JSON.parse(sessionStorage.getItem("petHelpApiPendingDraft") || "null"); } catch (error) { pendingDraft = null; }
+    if (pendingDraft) {
+      const selector = pendingDraft.type === "find" ? "form[data-save-find]" : pendingDraft.type === "help" ? "form[data-save-help]" : "form[data-save-goods]";
+      const form = document.querySelector(selector);
+      if (form) {
+        Object.keys(pendingDraft.values || {}).forEach(function (name) {
+          const field = form.elements.namedItem(name);
+          if (field) field.value = pendingDraft.values[name];
+        });
+        sessionStorage.removeItem("petHelpApiPendingDraft");
+        apiToast("已恢复草稿；请重新填写合成联系方式并确认用途");
+      }
+    }
+
+    try {
+      const health = await apiRequest("/api/v1/health");
+      if (health.wechat_auth_configured) document.body.dataset.wechatConfigured = "true";
+      const token = apiToken();
+      if (token) {
+        try { apiUser = (await apiRequest("/api/v1/auth/me")).user; }
+        catch (error) { sessionStorage.removeItem("petHelpApiToken"); }
+      }
+      if (apiUser) await apiLoadFavorites();
+      if (document.querySelector("[data-find-list]")) await apiRenderList("find");
+      if (document.querySelector("[data-help-list]")) await apiRenderList("help");
+      if (document.querySelector("[data-goods-list]")) await apiRenderList("goods");
+      if (document.querySelector("[data-find-detail],[data-help-detail],[data-goods-detail]")) await apiRenderDetail();
+      if (document.querySelector("[data-favorites-list]")) {
+        if (await apiRequireLogin()) await apiRenderFavorites();
+      }
+      if (document.querySelector("[data-mine-post-list]")) {
+        const count = document.querySelector("[data-mine-post-count]");
+        const favoriteCount = document.querySelector("[data-mine-favorite-count]");
+        const display = document.querySelector("[data-demo-user-name]");
+        const authState = document.querySelector("[data-demo-user-auth]");
+        if (display) display.textContent = apiUser ? apiUser.display_name : "访客模式";
+        if (authState) authState.textContent = apiUser ? "服务端会话 · 未实名认证" : "未登录 · API 模式";
+        if (await apiRequireLogin()) {
+          const mine = await apiRequest("/api/v1/me/posts");
+          const favorites = await apiRequest("/api/v1/me/favorites");
+          if (count) count.textContent = String(mine.items.length);
+          if (favoriteCount) favoriteCount.textContent = String(favorites.items.length);
+          await apiRenderMine();
+        }
+      }
+      const feed = document.querySelector("[data-home-feed]");
+      if (feed) {
+        const groups = await Promise.all(["find", "help", "goods"].map(function (type) { return apiRequest("/api/v1/posts/" + type + "?limit=4"); }));
+        const items = groups.flatMap(function (group) { return group.items; }).sort(function (a, b) { return b.created_at.localeCompare(a.created_at); }).slice(0, 4);
+        feed.replaceChildren();
+        if (!items.length) {
+          const empty = document.createElement("p");
+          empty.className = "text-sm text-slate-500 bg-white rounded-xl p-4";
+          empty.textContent = "服务端暂无有效社区动态";
+          feed.appendChild(empty);
+        } else items.forEach(function (post) { feed.appendChild(apiCreateCard(post, apiUser?.id)); });
+      }
+      const filter = document.getElementById("goodsFilter");
+      if (filter) filter.addEventListener("change", function () { void apiRenderList("goods").catch(function (error) { apiToast(error.message); }); });
+    } catch (error) {
+      const warning = document.createElement("div");
+      warning.className = "mx-4 mt-3 p-3 rounded-xl bg-rose-50 text-sm text-coral";
+      warning.textContent = error.message;
+      document.querySelector(".app-shell")?.prepend(warning);
+    }
+  }
+
+  function bindFreePriceControl() {
+    document.querySelectorAll("[data-free-toggle]").forEach(function (toggle) {
+      const price = toggle.form?.elements.namedItem("price");
+      if (!price) return;
+      const sync = function () {
+        price.disabled = toggle.checked;
+        price.required = !toggle.checked;
+      };
+      toggle.addEventListener("change", sync);
+      sync();
+    });
+  }
+
   function typeFromPathForDemo() {
     if (document.querySelector("[data-find-detail]")) return "find";
     if (document.querySelector("[data-help-detail]")) return "help";
@@ -1050,5 +1740,7 @@
     return null;
   }
 
-  bindDemoInteractions();
+  bindFreePriceControl();
+  if (API_MODE) void initApiMode();
+  else bindDemoInteractions();
 })();
